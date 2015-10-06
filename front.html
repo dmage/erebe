@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="http://yastatic.net/jquery/2.1.4/jquery.min.js"></script>
+        <script>
+            function connect() {
+                var socket = new WebSocket("ws://localhost:8080/events");
+                socket.onopen = function (e) {
+                    console.log("onopen", e);
+                    var i = 0;
+                    setInterval(function () {
+                        i += 1;
+                        socket.send("ping " + i);
+                    }, 1000);
+                };
+                socket.onmessage = function (e) {
+                    console.log("onmessage", e);
+                };
+                socket.onerror = function (e) {
+                    console.log("onerror", e);
+                };
+                socket.onclose = function (e) {
+                    console.log("onclose", e);
+                    setTimeout(connect, 5000);
+                };
+            }
+
+            $(function () {
+                connect();
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Open console, Luke</h1>
+    </body>
+</html>
